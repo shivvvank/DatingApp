@@ -1,4 +1,3 @@
-//this class entry point to our application
 using System.Text;
 using API.Data;
 using API.Extensions;
@@ -8,23 +7,23 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 
-var builder = WebApplication.CreateBuilder(args); // creates web apps instance
+var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+
 builder.Services.AddControllers();
-builder.Services.AddApplicationService(builder.Configuration);
-builder.Services.AddIdentityService(builder.Configuration);
+builder.Services.AddApplicationServices(builder.Configuration);
+builder.Services.AddIdentityServices(builder.Configuration);
 
+var app = builder.Build();
 
-var app = builder.Build();//Add services before builder
-
-//when we hit endpoint like weatherforecast it comes here 
 // Configure the HTTP request pipeline.
-// Is request made by authroised user?
-app.MapControllers(); //middleware to map controller endpoints
-app.UseCors(policyBuilder=>policyBuilder.AllowAnyHeader().AllowAnyMethod()
+app.UseCors(builder => builder.AllowAnyHeader().AllowAnyMethod()
     .WithOrigins("https://localhost:4200"));
 
-app.UseAuthentication(); // asks Do you have valid token
-app.UseAuthorization(); // asks what access you have 
+app.UseAuthentication();
+app.UseAuthorization();
+
+app.MapControllers();
+
 app.Run();
